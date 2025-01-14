@@ -1,6 +1,10 @@
 package logger
 
-import "github.com/fatih/color"
+import (
+	"fmt"
+
+	"github.com/fatih/color"
+)
 
 type LogLevel int
 
@@ -22,19 +26,19 @@ var logColors = map[LogLevel]*color.Color{
 	DEFAULT: color.New(color.FgWhite),
 }
 
-func Info(msg string) {
-	printLog(INFO, msg)
+func Info(format string, args ...any) {
+	printLog(INFO, format, args...)
 }
 
-func Error(msg string) {
-	printLog(ERROR, msg)
+func Error(format string, args ...any) {
+	printLog(ERROR, format, args...)
 }
 
-func Success(msg string) {
-	printLog(SUCCESS, msg)
+func Success(format string, args ...any) {
+	printLog(SUCCESS, format, args...)
 }
 
-func printLog(level LogLevel, msg string) {
+func printLog(level LogLevel, format string, args ...any) {
 	logColor := logColors[level]
-	logColor.Printf("[%s] %s\n", level, msg)
+	logColor.Printf("[%s] %v\n", level, fmt.Sprintf(format, args...))
 }

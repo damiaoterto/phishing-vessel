@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/damiaoterto/phishing-vessel/internal/logger"
 	"github.com/damiaoterto/phishing-vessel/internal/utils"
 	"github.com/urfave/cli/v2"
 )
@@ -18,7 +19,7 @@ func ClonePage(ctx *cli.Context) error {
 		return fmt.Errorf("invalid url format: %w", err)
 	}
 
-	fmt.Printf("cloning page %s\n", pageURL)
+	logger.Info("Cloning page %s", pageURL.String())
 	host := pageURL.Host
 
 	if err := prepareStorageDir(host); err != nil {
