@@ -26,19 +26,36 @@ var logColors = map[LogLevel]*color.Color{
 	DEFAULT: color.New(color.FgWhite),
 }
 
-func Info(format string, args ...any) {
-	printLog(INFO, format, args...)
+func Infof(format string, args ...any) {
+	printLogf(INFO, format, args...)
 }
 
-func Error(format string, args ...any) {
-	printLog(ERROR, format, args...)
+func Info(msg string) {
+	printLog(INFO, msg)
 }
 
-func Success(format string, args ...any) {
-	printLog(SUCCESS, format, args...)
+func Errorf(format string, args ...any) {
+	printLogf(ERROR, format, args...)
 }
 
-func printLog(level LogLevel, format string, args ...any) {
+func Error(msg string) {
+	printLog(ERROR, msg)
+}
+
+func Successf(format string, args ...any) {
+	printLogf(SUCCESS, format, args...)
+}
+
+func Success(msg string) {
+	printLog(SUCCESS, msg)
+}
+
+func printLogf(level LogLevel, format string, args ...any) {
 	logColor := logColors[level]
 	logColor.Printf("[%s] %v\n", level, fmt.Sprintf(format, args...))
+}
+
+func printLog(level LogLevel, msg string) {
+	logColor := logColors[level]
+	logColor.Printf("[%s] %s\n", level, msg)
 }

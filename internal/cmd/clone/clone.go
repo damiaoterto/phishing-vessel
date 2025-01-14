@@ -19,7 +19,7 @@ func ClonePage(ctx *cli.Context) error {
 		return fmt.Errorf("invalid url format: %w", err)
 	}
 
-	logger.Info("Cloning page %s", pageURL.String())
+	logger.Infof("Cloning page %s", pageURL.String())
 	host := pageURL.Host
 
 	if err := prepareStorageDir(host); err != nil {
@@ -31,6 +31,11 @@ func ClonePage(ctx *cli.Context) error {
 		return fmt.Errorf("failed on get page source: %w", err)
 	}
 	defer body.Close()
+
+	// doc, err := goquery.NewDocumentFromReader(body)
+	// if err != nil {
+	// 	return fmt.Errorf("failed to parse page: %w", err)
+	// }
 
 	return nil
 }
