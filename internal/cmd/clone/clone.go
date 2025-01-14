@@ -2,11 +2,11 @@ package clone
 
 import (
 	"fmt"
-	"log"
 	"net/url"
 	"os"
 	"path/filepath"
 
+	"github.com/damiaoterto/phishing-vessel/internal/utils"
 	"github.com/urfave/cli/v2"
 )
 
@@ -18,12 +18,18 @@ func ClonePage(ctx *cli.Context) error {
 		return fmt.Errorf("invalid url format: %w", err)
 	}
 
-	log.Printf("Cloning page '%s'", pageURL)
+	fmt.Printf("cloning page %s\n", pageURL)
 	host := pageURL.Host
 
 	if err := prepareStorageDir(host); err != nil {
 		return fmt.Errorf("failed to prepare storage: %w", err)
 	}
+
+	body, err := utils.RequestPageBody(ctx.String("url"))
+	if err != nil {
+		return fmt.Errorf("failed on get page source: %w", err)
+	}
+	defer body.Close()
 
 	return nil
 }
