@@ -11,6 +11,8 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+type ResourceType int
+
 var AppDirName string = ".phishing-vessel"
 
 func ClonePage(ctx *cli.Context) error {
@@ -22,7 +24,14 @@ func ClonePage(ctx *cli.Context) error {
 	logger.Infof("Cloning page %s", pageURL.String())
 	host := pageURL.Host
 
-	if err := prepareStorageDir(host); err != nil {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return fmt.Errorf("failed to get user directory: %w", err)
+	}
+
+	pageDir := filepath.Join(homeDir, AppDirName, host)
+
+	if err := prepareStorageDir(pageDir); err != nil {
 		return fmt.Errorf("failed to prepare storage: %w", err)
 	}
 
@@ -32,21 +41,10 @@ func ClonePage(ctx *cli.Context) error {
 	}
 	defer body.Close()
 
-	// doc, err := goquery.NewDocumentFromReader(body)
-	// if err != nil {
-	// 	return fmt.Errorf("failed to parse page: %w", err)
-	// }
-
 	return nil
 }
 
-func prepareStorageDir(host string) error {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return fmt.Errorf("failed to get user directory: %w", err)
-	}
-
-	pageDir := filepath.Join(homeDir, AppDirName, host)
+func prepareStorageDir(pageDir string) error {
 	exists, err := directoryExists(pageDir)
 	if err != nil {
 		return fmt.Errorf("failed to check directory: %w", err)
